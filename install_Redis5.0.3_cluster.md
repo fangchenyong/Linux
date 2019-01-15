@@ -24,41 +24,41 @@ CONTRIBUTING     INSTALL  README.md  runtest-cluster  src
 [root@VM_0_5_centos redis01]# vim redis.conf 
 ```
 
-> 1、把 bind 127.0.0.1 给注释掉或者改为0.0.0.0，这里的bind指的是只有指定的网段才能远程访问这个redis
+#### 4. 把 bind 127.0.0.1 给注释掉或者改为0.0.0.0，这里的bind指的是只有指定的网段才能远程访问这个redis
 
 ![集群1](images/集群1.png)
 
-> 2、开启远程访问 protected-mode no 和 修改端口 port 7001
+#### 5. 开启远程访问 protected-mode no 和 修改端口 port 7001
 
 ![集群2](images/集群2.png)
 
-> 3、设置后台运行 daemonize yes
+#### 6. 设置后台运行 daemonize yes
 
 ![集群3](images/集群3.png)
 
-> 4、设置pidfile存放在 run目录下的文件名  pidfile  /var/run/redis_7001.pid
+#### 7. 设置pidfile存放在 run目录下的文件名  pidfile  /var/run/redis_7001.pid
 
 ![集群4](images/集群4.png)
 
-> 5、设置redis集群密码 masterauth 123456 和 requirepass 123456       注意：所有节点的密码都必须一致，masterauth也要加
+#### 8. 设置redis集群密码 masterauth 123456 和 requirepass 123456       注意：所有节点的密码都必须一致，masterauth也要加
 
 ![集群5.1](images/集群5.1.png)
 
 ![集群5.2](images/集群5.2.png)
 
-> 6、设置开启AOF模式  appendonly yes 
+#### 9. 设置开启AOF模式  appendonly yes 
 
 ![集群6](images/集群6.png)
 
-> 7、设置启用集群模式 cluster-enabled yes，开启配置文件cluster-config-file nodes.conf ，超时时间 cluster-node-timeout 5000
+#### 10. 设置启用集群模式 cluster-enabled yes，开启配置文件cluster-config-file nodes.conf ，超时时间 cluster-node-timeout 5000
 
 ![集群7](images/集群7.png)
 
-> 8、配置好后，拷贝 redis01再创建五个redis实例
+#### 11. 配置好后，拷贝 redis01再创建五个redis实例
 
 ![集群8](images/集群8.png)
 
->9、修改redis02~06的配置文件，修改端口号，修改pidfile存放文件名
+#### 12. 修改redis02~06的配置文件，修改端口号，修改pidfile存放文件名
 
 ```shell
 [root@VM_0_5_centos redis-cluster]# vim redis02/redis.conf 
@@ -68,16 +68,16 @@ CONTRIBUTING     INSTALL  README.md  runtest-cluster  src
 [root@VM_0_5_centos redis-cluster]# vim redis06/redis.conf 
 ```
 
-> 10、在redis-cluster目录下，编写redis_start_all.sh启动脚本，启动redis实例
+#### 13. 在redis-cluster目录下，编写redis_start_all.sh启动脚本，启动redis实例
 
 ![集群10](images/集群10.png)
 
-> 11、刚创建好的启动脚本没有权限，会提示Permission denied，所以需要给脚本添加可执行权限
+#### 14. 刚创建好的启动脚本没有权限，会提示Permission denied，所以需要给脚本添加可执行权限
 
 ![集群11](images/集群11.png)
 
-> > **权限部分说明**
-> >
+> **权限部分说明**
+>
 > > ```shel
 > > -rw-r--r-- 1 root root  490 Jan 13 22:32 redis_cluster_start_all.sh
 > > ```
@@ -123,7 +123,7 @@ CONTRIBUTING     INSTALL  README.md  runtest-cluster  src
 > >
 > > -rwxrwxrwx (777) 每个人都有读写和执行的权限
 
-> 12、启动redis集群
+#### 15. 启动redis集群
 
 ```shell
 [root@VM_0_5_centos redis-cluster]# ./redis_cluster_start_all.sh
@@ -131,7 +131,7 @@ CONTRIBUTING     INSTALL  README.md  runtest-cluster  src
 
 ![集群12](images/集群12.png)
 
-> 13、复进入到redis01/bin/ 目录下，拷贝一份 redis-cli 到  redis-cluster/ 目录下
+#### 16. 复进入到redis01/bin/ 目录下，拷贝一份 redis-cli 到  redis-cluster/ 目录下
 
 ```shell
 [root@VM_0_5_centos src]# cp redis-cli /usr/local/redis/redis-cluster/
@@ -139,7 +139,7 @@ CONTRIBUTING     INSTALL  README.md  runtest-cluster  src
 redis01  redis02  redis03  redis04  redis05  redis06  redis-cli  redis_cluster_start_all.sh
 ```
 
-> 14 、创建redis集群
+#### 17. 创建redis集群
 
 ```shell
 [root@VM_0_5_centos redis-cluster]# ./redis-cli --cluster create 118.25.24.23:7001 118.25.24.23:7002 118.25.24.23:7003 118.25.24.23:7004 118.25.24.23:7005 118.25.24.23:7006 --cluster-replicas 1 -a 123456
@@ -196,11 +196,11 @@ M: 9608312874a165adcea031713c5256c4c3d7eb63 118.25.24.23:7003
 [OK] All 16384 slots covered.
 ```
 
-> 15、在redis-cluster目录下，编写redis_cluster_stop_all.sh关闭脚本
+#### 18. 在redis-cluster目录下，编写redis_cluster_stop_all.sh关闭脚本
 
 ![集群15](images/集群15.png)
 
-> 16、给redis_cluster_stop_all.sh脚本添加可执行权限(参考11点给启动脚本添加权限)
+#### 19. 给redis_cluster_stop_all.sh脚本添加可执行权限(参考11点给启动脚本添加权限)
 
 ```shell
 [root@VM_0_5_centos redis-cluster]# ll | grep redis_cluster_stop_all.sh
@@ -212,7 +212,103 @@ M: 9608312874a165adcea031713c5256c4c3d7eb63 118.25.24.23:7003
 
 ![集群16](images/集群16.png)
 
-> 17、执行停止脚本
+#### 20. 执行停止脚本
 
 ![集群17](images/集群17.png)
 
+#### 21. java使用jedis连接集群
+
+> 1. **pom.xml中引入相关jar包**
+>
+> ```xml
+> <!--整合redis-->
+> <dependency>
+>     <groupId>org.springframework.boot</groupId>
+>     <artifactId>spring-boot-starter-data-redis</artifactId>
+>     <version>2.1.1.RELEASE</version>
+> </dependency>
+> 
+> <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
+> <dependency>
+>     <groupId>redis.clients</groupId>
+>     <artifactId>jedis</artifactId>
+>     <version>3.0.1</version>
+> </dependency>
+> ```
+>
+> 2. **配置文件中添加集群节点信息**
+>
+> ```yaml
+> spring: 
+>   redis:
+>     cluster:
+>       nodes: 118.25.24.23:7001,118.25.24.23:7002,118.25.24.23:7003,118.25.24.23:7004,118.25.24.23:7005,118.25.24.23:7006
+> ```
+>
+> 3. **编写redis配置类**
+>
+> ```java
+> package com.joey.config;
+> 
+> import org.springframework.beans.factory.annotation.Value;
+> import org.springframework.context.annotation.Bean;
+> import org.springframework.context.annotation.Configuration;
+> import redis.clients.jedis.HostAndPort;
+> import redis.clients.jedis.JedisCluster;
+> import redis.clients.jedis.JedisPoolConfig;
+> 
+> import java.util.HashSet;
+> import java.util.Set;
+> 
+> /**
+>  * 〈redis集群配置〉
+>  *
+>  * @author Joey
+>  * @create 2019-01-14
+>  * @since 1.0.0
+>  */
+> @Configuration
+> public class RedisConfig {
+> 
+>     @Value("${spring.redis.cluster.nodes}")
+>     private String redisNodes;
+> 
+>     @Bean
+>     public JedisCluster getJedisCluster(){
+>         Set<HostAndPort> nodes = new HashSet<>();
+>         try {
+>             String[] redisnodes = redisNodes.split(",");
+>             for (String node:redisnodes){
+>                 String[] arr = node.split(":");
+>                 HostAndPort hostAndPort = new HostAndPort(arr[0], Integer.parseInt(arr[1]));
+>                 nodes.add(hostAndPort);
+>             }
+>         }
+>         catch (Exception e){
+>             System.out.println("集群节点配置有误");
+>         }
+>         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+>         //配置password否则会报权限错误
+>         JedisCluster cluster = new JedisCluster(nodes,0,0,500,"123456",jedisPoolConfig);
+>         return cluster;
+>     }
+> }
+> ```
+>
+> 4. **编写Service接口类，实现类以及Controller类**
+>
+>    (1). 接口类
+>
+> ![集群接口类](images/集群接口类.png)
+>
+> ​	(2). 实现类
+>
+> ![集群实现类](images/集群实现类.png)
+>
+> ​	(3). Controller类
+>
+> ![集群控制类](images/集群控制类.png)
+>
+> 5. **浏览器访问**
+>
+> ![集群成功](images/集群成功.png)
